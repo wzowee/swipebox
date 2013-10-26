@@ -19,7 +19,8 @@
 			videoMaxWidth : 1140,
 			vimeoColor : 'CCCCCC',
 			beforeOpen: null,
-		      	afterClose: null
+		    afterClose: null,
+            actionsOnTop: false
 		},
 		
 		plugin = this,
@@ -31,15 +32,17 @@
 		supportSVG = !!(window.SVGSVGElement),
 		winWidth = window.innerWidth ? window.innerWidth : $(window).width(),
 		winHeight = window.innerHeight ? window.innerHeight : $(window).height(),
+        titleContainer = "#swipebox-header",
+        actionContainer = "#swipebox-footer",
 		html = '<div id="swipebox-overlay">\
 				<div id="swipebox-slider"></div>\
-				<div id="swipebox-caption"></div>\
-				<div id="swipebox-action">\
-					<a id="swipebox-close"></a>\
+				<div id="swipebox-header"></div>\
+				<div id="swipebox-footer"></div>\
+		        </div>',
+        actionsHtml = '<a id="swipebox-close"></a>\
 					<a id="swipebox-prev"></a>\
-					<a id="swipebox-next"></a>\
-				</div>\
-		</div>';
+					<a id="swipebox-next"></a>';
+
 
 		plugin.settings = {}
 
@@ -122,6 +125,13 @@
 
 				$('body').append(html);
 
+                if(plugin.settings.actionsOnTop){
+                    actionContainer = "#swipebox-header";
+                    titleContainer = "#swipebox-footer";
+                }
+
+                $(actionContainer).html(actionsHtml);
+
 				if($this.doCssTrans()){
 					$('#swipebox-slider').css({
 						'-webkit-transition' : 'left 0.4s ease',
@@ -137,7 +147,7 @@
 						'-khtml-transition' : 'opacity 1s ease',
 						'transition' : 'opacity 1s ease'
 					});
-					$('#swipebox-action, #swipebox-caption').css({
+					$('#swipebox-footer, #swipebox-header').css({
 						'-webkit-transition' : '0.5s',
 						'-moz-transition' : '0.5s',
 						'-o-transition' : '0.5s',
@@ -148,9 +158,9 @@
 
 
 				if(supportSVG){
-					var bg = $('#swipebox-action #swipebox-close').css('background-image');
+					var bg = $('#swipebox-close').css('background-image');
 					bg = bg.replace('png', 'svg');
-					$('#swipebox-action #swipebox-prev,#swipebox-action #swipebox-next,#swipebox-action #swipebox-close').css({
+					$('#swipebox-prev,#swipebox-next,#swipebox-close').css({
 						'background-image' : bg
 					});
 				}
@@ -232,7 +242,7 @@
 					swipMinDistance = 10,
 					startCoords = {},
 					endCoords = {};
-					var bars = $('#swipebox-caption, #swipebox-action');
+					var bars = $('#swipebox-header, #swipebox-footer');
 
 					bars.addClass('visible-bars');
 					$this.setTimeout();
@@ -305,12 +315,12 @@
 			},
 
 			showBars : function(){
-				var bars = $('#swipebox-caption, #swipebox-action');
+				var bars = $('#swipebox-header, #swipebox-footer');
 				if(this.doCssTrans()){
 					bars.addClass('visible-bars');
 				}else{
-					$('#swipebox-caption').animate({ top : 0 }, 500);
-					$('#swipebox-action').animate({ bottom : 0 }, 500);
+					$('#swipebox-header').animate({ top : 0 }, 500);
+					$('#swipebox-footer').animate({ bottom : 0 }, 500);
 					setTimeout(function(){
 						bars.addClass('visible-bars');
 					}, 1000);
@@ -318,12 +328,12 @@
 			},
 
 			hideBars : function(){
-				var bars = $('#swipebox-caption, #swipebox-action');
+				var bars = $('#swipebox-header, #swipebox-footer');
 				if(this.doCssTrans()){
 					bars.removeClass('visible-bars');
 				}else{
-					$('#swipebox-caption').animate({ top : '-50px' }, 500);
-					$('#swipebox-action').animate({ bottom : '-50px' }, 500);
+					$('#swipebox-header').animate({ top : '-50px' }, 500);
+					$('#swipebox-footer').animate({ bottom : '-50px' }, 500);
 					setTimeout(function(){
 						bars.removeClass('visible-bars');
 					}, 1000);
@@ -332,7 +342,7 @@
 
 			animBars : function(){
 				var $this = this;
-				var bars = $('#swipebox-caption, #swipebox-action');
+				var bars = $('#swipebox-header, #swipebox-footer');
 					
 				bars.addClass('visible-bars');
 				$this.setTimeout();
@@ -344,7 +354,7 @@
 					}
 				});
 
-				$('#swipebox-action').hover(function() {
+				$(actionContainer).hover(function() {
 				  		$this.showBars();
 						bars.addClass('force-visible-bars');
 						$this.clearTimeout();
@@ -470,13 +480,13 @@
 			setTitle : function (index, isFirst){
 				var title = null;
 
-				$('#swipebox-caption').empty();
+				$(titleContainer).empty();
 
 				if( elements[index] !== undefined )
 					title = elements[index].title;
 				
 				if(title){
-					$('#swipebox-caption').append(title);
+					$(titleContainer).append(title);
 				}
 			},
 
