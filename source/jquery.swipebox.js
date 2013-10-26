@@ -22,7 +22,6 @@
 		    afterClose: null,
             actionsOnTop: false
 		},
-		
 		plugin = this,
 		elements = [], // slides array [{href:'...', title:'...'}, ...],
 		elem = elem,
@@ -43,19 +42,16 @@
 					<a id="swipebox-prev"></a>\
 					<a id="swipebox-next"></a>';
 
-
 		plugin.settings = {}
 
 		plugin.init = function(){
 
 			plugin.settings = $.extend({}, defaults, options);
 
-			if ($.isArray(elem)) {
-
+            if ($.isArray(elem)) {
 				elements = elem;
 				ui.target = $(window);
 				ui.init(plugin.settings.initialIndexOnArray);
-
 			}else{
 
 				$selector.click(function(e){
@@ -306,7 +302,9 @@
 						$this.hideBars() },
 						plugin.settings.hideBarsDelay
 					);
-				}
+				}else{
+                    $('#swipebox-slider .slide').css({paddingTop:$('#swipebox-header').height(), paddingBottom:$('#swipebox-footer').height()});
+                }
 			},
 			
 			clearTimeout: function(){	
